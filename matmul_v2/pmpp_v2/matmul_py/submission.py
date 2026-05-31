@@ -2,7 +2,6 @@
 #!POPCORN gpu A100
 
 from task import input_t, output_t
-import torch
 import pathlib
 from torch.utils.cpp_extension import load_inline
 
@@ -15,8 +14,9 @@ cuda_module = load_inline(
     cuda_sources=cuda_source,
     functions=["forward"],
     with_cuda=True,
-    extra_cflags=["-O3"]
+    extra_cflags=["-O3"],
 )
+
 
 def custom_kernel(data: input_t) -> output_t:
     """
