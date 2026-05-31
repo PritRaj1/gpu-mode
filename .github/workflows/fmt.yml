@@ -1,0 +1,41 @@
+name: Fmt
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+permissions:
+  contents: write
+
+jobs:
+  format-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref }}
+
+      - name: Install Ruff
+        run: pip install ruff
+
+      - name: Format Python Files
+        run: |
+          ruff format .
+          ruff check --fix --unsafe-fixes . || true
+
+      - name: Install Clang-Format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+
+      - name: Format CUDA Files
+        run: |
+          find . -name "*.cu" -o -name "*.cuh" | xargs -r clang-format -i --style=Google
+
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "ci: auto-format python and cuda [skip ci]"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
