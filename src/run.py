@@ -2,13 +2,14 @@ import torch
 import sys
 import importlib.util
 from pathlib import Path
-from task import input_t, output_t
+
 
 def load_submission(path):
     spec = importlib.util.spec_from_file_location("submission", path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module.custom_kernel
+
 
 def main():
     if len(sys.argv) < 2:
@@ -42,9 +43,10 @@ def main():
         else:
             print("x Output contains NaNs/Infs")
 
-    except Exception as e:
+    except Exception:
         print("x Kernel crashed")
         raise
+
 
 if __name__ == "__main__":
     main()

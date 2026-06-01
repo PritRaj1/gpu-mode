@@ -9,10 +9,7 @@ template_path = Path("src/template.py")
 kernel = kernel_path.read_text()
 template = template_path.read_text()
 
-submission = template.replace(
-    "__CUDA_SOURCE__",
-    f'r"""\n{kernel}\n"""'
-)
+submission = template.replace("__CUDA_SOURCE__", f'r"""\n{kernel}\n"""')
 
 out_path = Path(f"build/{problem}_submission.py")
 out_path.write_text(submission)
