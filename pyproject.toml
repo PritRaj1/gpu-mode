@@ -2,11 +2,10 @@
 name = "gpu-mode"
 version = "0.1.0"
 requires-python = ">=3.10,<3.12"
-dependencies = [
-    "torch",
-    "numpy",
-    "ninja",
-    "task", 
-]
 
-[tool.uv]
+dependencies = [
+    "torch>=2.5,<2.8",
+    "numpy<2",
+    "ninja",
+    "pytest",
+]
