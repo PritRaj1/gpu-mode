@@ -1,2 +1,0 @@
-[console_scripts]
-popcorn-dev = src.cli:main

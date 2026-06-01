@@ -8,7 +8,12 @@ dependencies = [
     "numpy<2",
     "ninja",
     "pytest",
+    "click",
 ]
 
 [project.scripts]
 gpu-mode = "src.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+packages = ["src"]

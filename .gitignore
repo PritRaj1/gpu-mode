@@ -5,3 +5,6 @@
 *.cubin
 *.fatbin
 temp/
+*.egg-info/
+.eggs/
+*.egg

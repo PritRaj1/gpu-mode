@@ -1,4 +1,0 @@
-torch<2.8,>=2.5
-numpy<2
-ninja
-pytest
