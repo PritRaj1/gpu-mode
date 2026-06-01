@@ -29,9 +29,12 @@ torch::Tensor forward(torch::Tensor A, torch::Tensor B, torch::Tensor C) {
     const int K = A.size(1);
     const int N = B.size(1);
 
-    // Choose num blocks in grid to cover output MxN
     dim3 threads(TILE_SIZE, TILE_SIZE, 1);
-    dim3 blocks((N + threads.x - 1) / threads.x, (M + threads.y - 1) / threads.y, 1);
+    dim3 blocks(
+        (N + threads.x - 1) / threads.x,
+        (M + threads.y - 1) / threads.y,
+        1
+    );
 
     // Launch the naive kernel on the default execution stream
     matmul_naive_kernel<<<blocks, threads>>>(
@@ -40,7 +43,7 @@ torch::Tensor forward(torch::Tensor A, torch::Tensor B, torch::Tensor C) {
         C.data_ptr<float>(),
         M, N, K
     );
-
+    cudaDeviceSynchronize();
     return C;
 }
 

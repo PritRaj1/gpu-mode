@@ -33,9 +33,12 @@ torch::Tensor forward(torch::Tensor A, torch::Tensor B, torch::Tensor C) {
     const int K = A.size(1);
     const int N = B.size(1);
 
-    // Choose num blocks in grid to cover output MxN
     dim3 threads(TILE_SIZE, TILE_SIZE, 1);
-    dim3 blocks((N + threads.x - 1) / threads.x, (M + threads.y - 1) / threads.y, 1);
+    dim3 blocks(
+        (N + threads.x - 1) / threads.x,
+        (M + threads.y - 1) / threads.y,
+        1
+    );
 
     // Launch the naive kernel on the default execution stream
     matmul_naive_kernel<<<blocks, threads>>>(
@@ -44,7 +47,7 @@ torch::Tensor forward(torch::Tensor A, torch::Tensor B, torch::Tensor C) {
         C.data_ptr<float>(),
         M, N, K
     );
-
+    cudaDeviceSynchronize();
     return C;
 }
 
@@ -63,5 +66,15 @@ cuda_module = load_inline(
 )
 
 def custom_kernel(data: input_t) -> output_t:
-    a, b, c = data
-    return cuda_module.forward(a, b, c)
+    A, B, C = data
+
+    if not A.is_contiguous(): A = A.contiguous()
+    if not B.is_contiguous(): B = B.contiguous()
+    if not C.is_contiguous(): C = C.contiguous()
+
+    default_stream = torch.cuda.default_stream()
+    with torch.cuda.stream(default_stream):
+        cuda_module.forward(A, B, C)
+        torch.cuda.synchronize()
+
+    return C

@@ -12,5 +12,15 @@ cuda_module = load_inline(
 )
 
 def custom_kernel(data: input_t) -> output_t:
-    a, b, c = data
-    return cuda_module.forward(a, b, c)
+    A, B, C = data
+
+    if not A.is_contiguous(): A = A.contiguous()
+    if not B.is_contiguous(): B = B.contiguous()
+    if not C.is_contiguous(): C = C.contiguous()
+
+    default_stream = torch.cuda.default_stream()
+    with torch.cuda.stream(default_stream):
+        cuda_module.forward(A, B, C)
+        torch.cuda.synchronize()
+
+    return C
