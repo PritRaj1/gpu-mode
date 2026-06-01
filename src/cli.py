@@ -57,6 +57,7 @@ def compile(problem):
     )
     click.secho("✔ Compilation OK!", fg="green")
 
+
 @main.command()
 def clean():
     """Clear build artifacts and wipe local PyTorch JIT caches."""
@@ -64,17 +65,16 @@ def clean():
     if build_dir.exists():
         shutil.rmtree(build_dir)
         click.echo("🧹 Removed build/ directory artifacts.")
-    
+
     torch_extensions_root = os.environ.get(
-        "TORCH_EXTENSIONS_DIR", 
-        os.path.expanduser("~/.cache/torch_extensions")
+        "TORCH_EXTENSIONS_DIR", os.path.expanduser("~/.cache/torch_extensions")
     )
     cache_dir = Path(torch_extensions_root)
-    
+
     if cache_dir.exists():
         shutil.rmtree(cache_dir)
         click.echo(f"Wiped Torch JIT extensions cache at: {cache_dir}")
-        
+
     click.secho("Workspace reset!", fg="green")
 
 
