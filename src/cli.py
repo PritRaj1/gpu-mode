@@ -2,10 +2,12 @@ from pathlib import Path
 import click
 from torch.utils.cpp_extension import load_inline
 
+
 @click.group()
 def main():
     """Utils for GPU Mode challenges."""
     pass
+
 
 @main.command()
 @click.argument("problem")
@@ -32,15 +34,16 @@ def build(problem, gpu):
 
     click.secho(f"✨ Successfully bundled -> {out_path} [{gpu}]", fg="green")
 
+
 @main.command()
 @click.argument("problem")
 def compile(problem):
     """JIT compile C++ kernel to check for compilation errors."""
     kernel_path = Path(f"problems/{problem}/kernel.cu")
-    
+
     if not kernel_path.exists():
         raise click.ClickException(f"Kernel source file missing at: {kernel_path}")
-        
+
     kernel = kernel_path.read_text()
 
     click.echo(f"Compiling {problem} kernel locally via load_inline...")
@@ -53,6 +56,7 @@ def compile(problem):
         verbose=True,
     )
     click.secho("✔ Compilation OK!", fg="green")
+
 
 if __name__ == "__main__":
     main()
