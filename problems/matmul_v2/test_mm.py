@@ -39,6 +39,6 @@ def test_shapes(M, K, N):
         f"\nShape ({M},{K},{N}) -> max error: {max_err:.6f}, mean error: {mean_err:.6f}"
     )
 
-    assert torch.allclose(C_cuda, C_ref, rtol=1e-1, atol=1e-1), (
+    assert torch.allclose(C_cuda, C_ref, rtol=1e-3, atol=1e-3), (
         f"Numerical check failed: max abs discrepancy found: {max_err:.6f}"
     )

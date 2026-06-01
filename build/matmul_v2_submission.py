@@ -23,12 +23,15 @@ __global__ void matmul_naive_kernel(const __half* __restrict__ A,
   const int col = blockIdx.x * blockDim.x + threadIdx.x;  // Horiz (X)
 
   if (row < M && col < N) {
-    __half acc = __float2half(0.0f);
+    float acc = 0.0f; // Accumulate full prec
+    
     for (int i = 0; i < K; ++i) {
-      acc = __hadd(
-          acc, __hmul(A[row * K + i], B[i * N + col]));  // Row-major indexing
+      float a_val = __half2float(A[row * K + i]);
+      float b_val = __half2float(B[i * N + col]);
+      acc += a_val * b_val;
     }
-    C[row * N + col] = acc;
+    
+    C[row * N + col] = __float2half(acc);
   }
 }
 
