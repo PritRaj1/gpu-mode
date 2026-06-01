@@ -1,7 +1,3 @@
-#!POPCORN leaderboard <EDIT HERE>
-#!POPCORN gpu A100
-
-
 from torch.utils.cpp_extension import load_inline
 from task import input_t, output_t
 
