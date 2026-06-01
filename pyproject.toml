@@ -9,3 +9,6 @@ dependencies = [
     "ninja",
     "pytest",
 ]
+
+[project.scripts]
+gpu-mode = "src.cli:main"

@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/cli.py
+src/template.py
+src/gpu_mode.egg-info/PKG-INFO
+src/gpu_mode.egg-info/SOURCES.txt
+src/gpu_mode.egg-info/dependency_links.txt
+src/gpu_mode.egg-info/entry_points.txt
+src/gpu_mode.egg-info/requires.txt
+src/gpu_mode.egg-info/top_level.txt
