@@ -4,10 +4,6 @@ import os
 from torch.utils.cpp_extension import load
 
 # Reference: https://siboehm.com/articles/22/CUDA-MMM
-import pytest
-import torch
-import os
-from torch.utils.cpp_extension import load
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 device = "cuda"
@@ -44,7 +40,7 @@ def test_shapes(M, K, N):
     print(
         f"\nShape ({M},{K},{N}) -> max error: {max_err:.6f}, mean error: {mean_err:.6f}"
     )
-    
+
     assert torch.allclose(C_cuda, C_ref, rtol=1e-1, atol=1e-1), (
         f"Numerical check failed: max abs discrepancy found: {max_err:.6f}"
     )
