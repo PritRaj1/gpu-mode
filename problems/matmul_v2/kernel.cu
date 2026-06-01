@@ -2,7 +2,7 @@
 #include <cuda_runtime.h>
 #include <torch/extension.h>
 
-#define TILE_SIZE 32
+#define TILE_SIZE 16
 
 /*
 __restrict__ hint: this pointer is the sole pointer that accesses A
@@ -16,8 +16,8 @@ __global__ void matmul_naive_kernel(const __half* __restrict__ A,
   const int col = blockIdx.x * blockDim.x + threadIdx.x;  // Horiz (X)
 
   if (row < M && col < N) {
-    float acc = 0.0f; // Accumulate full prec
-    
+    float acc = __half2float(C[row * N + col]);
+
     for (int i = 0; i < K; ++i) {
       float a_val = __half2float(A[row * K + i]);
       float b_val = __half2float(B[i * N + col]);
