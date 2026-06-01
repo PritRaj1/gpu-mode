@@ -9,8 +9,6 @@ CUDA_SRC = r"""
 #include <cuda_runtime.h>
 #include <torch/extension.h>
 
-// Reference: https://siboehm.com/articles/22/CUDA-MMM
-
 #define TILE_SIZE 32
 
 __global__ void matmul_naive_kernel(
@@ -39,7 +37,6 @@ torch::Tensor forward(torch::Tensor A, torch::Tensor B, torch::Tensor C) {
   dim3 blocks((N + threads.x - 1) / threads.x, (M + threads.y - 1) / threads.y,
               1);
 
-  // Launch the naive kernel on the default execution stream
   matmul_naive_kernel<<<blocks, threads>>>(
       A.data_ptr<float>(), B.data_ptr<float>(), C.data_ptr<float>(), M, N, K);
   return C;
@@ -63,8 +60,6 @@ cuda_module = load_inline(
 def custom_kernel(data: input_t) -> output_t:
     A, B, C = data
 
-    torch.cuda.synchronize()
-
     if not A.is_contiguous():
         A = A.contiguous()
     if not B.is_contiguous():
@@ -73,6 +68,4 @@ def custom_kernel(data: input_t) -> output_t:
         C = C.contiguous()
 
     cuda_module.forward(A, B, C)
-    torch.cuda.synchronize()
-
     return C

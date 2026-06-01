@@ -3,6 +3,8 @@ import torch
 import os
 from torch.utils.cpp_extension import load
 
+# Reference: https://siboehm.com/articles/22/CUDA-MMM
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 device = "cuda"
 

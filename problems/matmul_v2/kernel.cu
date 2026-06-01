@@ -1,8 +1,6 @@
 #include <cuda_runtime.h>
 #include <torch/extension.h>
 
-// Reference: https://siboehm.com/articles/22/CUDA-MMM
-
 #define TILE_SIZE 32
 
 __global__ void matmul_naive_kernel(
@@ -31,10 +29,8 @@ torch::Tensor forward(torch::Tensor A, torch::Tensor B, torch::Tensor C) {
   dim3 blocks((N + threads.x - 1) / threads.x, (M + threads.y - 1) / threads.y,
               1);
 
-  // Launch the naive kernel on the default execution stream
   matmul_naive_kernel<<<blocks, threads>>>(
       A.data_ptr<float>(), B.data_ptr<float>(), C.data_ptr<float>(), M, N, K);
-  cudaDeviceSynchronize();
   return C;
 }
 

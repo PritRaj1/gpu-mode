@@ -19,8 +19,6 @@ cuda_module = load_inline(
 def custom_kernel(data: input_t) -> output_t:
     A, B, C = data
 
-    torch.cuda.synchronize()
-
     if not A.is_contiguous():
         A = A.contiguous()
     if not B.is_contiguous():
@@ -29,6 +27,4 @@ def custom_kernel(data: input_t) -> output_t:
         C = C.contiguous()
 
     cuda_module.forward(A, B, C)
-    torch.cuda.synchronize()
-
     return C
