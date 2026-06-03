@@ -7,24 +7,26 @@
 /*
 __restrict__ hint: this pointer is the sole pointer that accesses A
 */
-__global__ void matmul_naive_kernel(const __half* __restrict__ A,
-                                    const __half* __restrict__ B,
-                                    __half* __restrict__ C, int M, int N,
-                                    int K) {
-  // Address = block_idx * block_size + thread_idx
-  const int row = blockIdx.y * blockDim.y + threadIdx.y;  // Vertical (Y)
-  const int col = blockIdx.x * blockDim.x + threadIdx.x;  // Horiz (X)
+__global__ void matmul_naive_kernel(const __half* __restrict__ a,
+                                    const __half* __restrict__ b,
+                                    __half* __restrict__ c, int m, int n,
+                                    int k, float alpha, float beta) {
+  // address = block_idx * block_size + thread_idx
+  const int row = blockIdx.y * blockDim.y + threadIdx.y;  // vertical (y)
+  const int col = blockIdx.x * blockDim.x + threadIdx.x;  // horiz (x)
 
-  if (row < M && col < N) {
-    float acc = __half2float(C[row * N + col]);
+  if (row < m && col < n) {
+    float dotprod = 0.0f;
 
-    for (int i = 0; i < K; ++i) {
-      float a_val = __half2float(A[row * K + i]);
-      float b_val = __half2float(B[i * N + col]);
-      acc += a_val * b_val;
+    for (int i = 0; i < k; ++i) {
+      float a_val = __half2float(a[row * k + i]);
+      float b_val = __half2float(b[i * n + col]);
+      dotprod += a_val * b_val;
     }
     
-    C[row * N + col] = __float2half(acc);
+    float c_val = __half2float(c[row * n + col]);
+    float fma_out = alpha * dotprod + beta * c_val;
+    c[row * n + col] = __float2half(fma_out);
   }
 }
 
@@ -32,6 +34,8 @@ torch::Tensor forward(torch::Tensor A, torch::Tensor B, torch::Tensor C) {
   const int M = A.size(0);
   const int K = A.size(1);
   const int N = B.size(1);
+  float alpha = 1.0f;
+  float beta = 0.0f;
 
   dim3 threads(TILE_SIZE, TILE_SIZE, 1);
   dim3 blocks((N + threads.x - 1) / threads.x, (M + threads.y - 1) / threads.y,
@@ -40,7 +44,7 @@ torch::Tensor forward(torch::Tensor A, torch::Tensor B, torch::Tensor C) {
   matmul_naive_kernel<<<blocks, threads>>>(
       reinterpret_cast<const __half*>(A.data_ptr<at::Half>()),
       reinterpret_cast<const __half*>(B.data_ptr<at::Half>()),
-      reinterpret_cast<__half*>(C.data_ptr<at::Half>()), M, N, K);
+      reinterpret_cast<__half*>(C.data_ptr<at::Half>()), M, N, K, alpha, beta);
 
   return C;
 }
