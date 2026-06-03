@@ -9,8 +9,8 @@ __restrict__ hint: this pointer is the sole pointer that accesses A
 */
 __global__ void matmul_naive_kernel(const __half* __restrict__ a,
                                     const __half* __restrict__ b,
-                                    __half* __restrict__ c, int m, int n,
-                                    int k, float alpha, float beta) {
+                                    __half* __restrict__ c, int m, int n, int k,
+                                    float alpha, float beta) {
   // address = block_idx * block_size + thread_idx
   const int row = blockIdx.y * blockDim.y + threadIdx.y;  // vertical (y)
   const int col = blockIdx.x * blockDim.x + threadIdx.x;  // horiz (x)
@@ -23,7 +23,7 @@ __global__ void matmul_naive_kernel(const __half* __restrict__ a,
       float b_val = __half2float(b[i * n + col]);
       dotprod += a_val * b_val;
     }
-    
+
     float c_val = __half2float(c[row * n + col]);
     float fma_out = alpha * dotprod + beta * c_val;
     c[row * n + col] = __float2half(fma_out);
