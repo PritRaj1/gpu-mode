@@ -17,8 +17,8 @@ __restrict__ hint: this pointer is the sole pointer that accesses A
 __global__ void matmul_naive_kernel(const __half* __restrict__ A,
                                     const __half* __restrict__ B,
                                     __half* __restrict__ C, int M, int N, int K) {
-  const int row = blockIdx.y * blockDim.y + threadIdx.y;  // vertical (y)
-  const int col = blockIdx.x * blockDim.x + threadIdx.x;  // horiz (x)
+  const int row = blockIdx.y * TILE_SIZE + (threadIdx.x / TILE_SIZE);  // vertical (y)
+  const int col = blockIdx.x * TILE_SIZE + (threadIdx.x % TILE_SIZE);  // horiz (x)
 
   if (row < M && col < N) {
     float acc = 0.0f;
@@ -38,8 +38,9 @@ torch::Tensor forward(torch::Tensor A, torch::Tensor B, torch::Tensor C) {
   const int K = A.size(1);
   const int N = B.size(1);
 
-  dim3 threads(TILE_SIZE, TILE_SIZE, 1);
-  dim3 blocks((N + threads.x - 1) / threads.x, (M + threads.y - 1) / threads.y,
+  // blockDim 1-dimensional, keeping total number of threads identical (256)
+  dim3 threads(TILE_SIZE * TILE_SIZE, 1, 1);
+  dim3 blocks((N + TILE_SIZE - 1) / TILE_SIZE, (M + TILE_SIZE - 1) / TILE_SIZE,
               1);
 
   matmul_naive_kernel<<<blocks, threads>>>(
