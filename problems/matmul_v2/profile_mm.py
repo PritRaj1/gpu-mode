@@ -8,7 +8,7 @@ device = "cuda"
 matmul_cuda = load(
     name="matmul_cuda_profile",
     sources=[os.path.join(HERE, "kernel.cu")],
-    extra_cuda_cflags=["-O3", "--ptxas-options=-v"], # verbose
+    extra_cuda_cflags=["-O3", "--ptxas-options=-v"],  # verbose
     verbose=True,
 )
 
