@@ -8,3 +8,10 @@ temp/
 *.egg-info/
 .eggs/
 *.egg
+*.nsys-rep
+*.qdstrm
+*.ncu-rep
+*.sqlite
+.cache/
+__pycache__/
+*.so
