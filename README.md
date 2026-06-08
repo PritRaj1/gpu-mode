@@ -2,6 +2,21 @@
 
 Submission for [GPU MODE](https://www.gpumode.com) practice problems.
 
+## Requirements
+
+- [uv](https://docs.astral.sh/uv/)
+- [Popcorn](https://github.com/gpu-mode/popcorn-cli)
+- [Nsight systems](https://developer.nvidia.com/nsight-systems/get-started)
+
+## NVIDIA Kernel Module Permissions
+
+Linux distros ship with the security flag `RestrictProfilingToAdminUsers=1` enabled. For profiling within an isolated Python env, you can instruct the kernel module to allow user-space register sampling:
+
+```bash
+echo "options nvidia NVreg_RestrictProfilingToAdminUsers=0" | sudo tee /etc/modprobe.d/nvidia-profiler.conf
+# Then reboot
+```
+
 ## Links
 
 - [Matmul step-through](https://siboehm.com/articles/22/CUDA-MMM)

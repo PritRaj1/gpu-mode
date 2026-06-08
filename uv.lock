@@ -60,7 +60,7 @@ wheels = [
 [[package]]
 name = "gpu-mode"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "click" },
     { name = "ninja" },
