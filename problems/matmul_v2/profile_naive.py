@@ -1,3 +1,10 @@
+"""
+ncu -f \
+  --nvtx \
+  -o report_naive \
+  uv run python profile_naive.py
+"""
+
 import os
 import torch
 from torch.utils.cpp_extension import load
@@ -7,13 +14,13 @@ device = "cuda"
 
 matmul_cuda = load(
     name="matmul_cuda_profile",
-    sources=[os.path.join(HERE, "kernel.cu")],
+    sources=[os.path.join(HERE, "naive.cu")],
     extra_cuda_cflags=["-O3", "--ptxas-options=-v"],  # verbose
     verbose=True,
 )
 
 if __name__ == "__main__":
-    M, K, N = 256, 256, 256
+    M, K, N = 4096, 4096, 4096
     torch.manual_seed(0)
     A = torch.randn(M, K, device=device, dtype=torch.float16).contiguous()
     B = torch.randn(K, N, device=device, dtype=torch.float16).contiguous()
@@ -26,7 +33,7 @@ if __name__ == "__main__":
         _ = matmul_cuda.forward(A, B, C)
     torch.cuda.synchronize()
 
-    with torch.cuda.nvtx.range("v1_coalesced_flat_mm"):
+    with torch.cuda.nvtx.range("naive_mm"):
         C_cuda = matmul_cuda.forward(A, B, C)
         torch.cuda.synchronize()
 
