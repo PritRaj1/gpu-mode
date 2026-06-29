@@ -56,7 +56,7 @@ echo "options nvidia NVreg_RestrictProfilingToAdminUsers=0" | sudo tee /etc/modp
 ## Links
 
 - [Matmul step-through](https://siboehm.com/articles/22/CUDA-MMM)
-- [Nsight profiling](https://arikpoz.github.io/posts/2025-05-25-speed-up-pytorch-training-by-3x-with-nvidia-nsight-and-pytorch-2-tricks/)
+- [Nsight profiling](https://puzzles.modular.com/puzzle_30/nvidia_profiling_basics.html)
 - [Using ncu-ui](https://www.youtube.com/watch?v=04dJ-aePYpE)
 - [Discord invite](https://discord.com/invite/gpumode)
 - [GPU Glossary](https://modal.com/gpu-glossary)
