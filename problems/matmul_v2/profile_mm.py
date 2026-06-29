@@ -20,7 +20,7 @@ matmul_cuda = load(
 )
 
 if __name__ == "__main__":
-    M, K, N = 4096, 4096, 4096
+    M, K, N = 256, 256, 256
     torch.manual_seed(0)
     A = torch.randn(M, K, device=device, dtype=torch.float16).contiguous()
     B = torch.randn(K, N, device=device, dtype=torch.float16).contiguous()
