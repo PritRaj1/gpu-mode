@@ -12,9 +12,9 @@ __global__ void matmul_naive_kernel(const __half *__restrict__ A,
                                     __half *__restrict__ C, int M, int N,
                                     int K) {
   const int row =
-      blockIdx.y * TILE_SIZE + (threadIdx.x / TILE_SIZE); // vertical (y)
+      blockIdx.y * TILE_SIZE + (threadIdx.x / TILE_SIZE);  // vertical (y)
   const int col =
-      blockIdx.x * TILE_SIZE + (threadIdx.x % TILE_SIZE); // horiz (x)
+      blockIdx.x * TILE_SIZE + (threadIdx.x % TILE_SIZE);  // horiz (x)
 
   if (row < M && col < N) {
     float acc = 0.0f;
@@ -34,7 +34,7 @@ torch::Tensor forward(torch::Tensor A, torch::Tensor B, torch::Tensor C) {
   const int K = A.size(1);
   const int N = B.size(1);
 
-  dim3 threads(TILE_SIZE * TILE_SIZE, 1, 1); // Single 1D block for coalescing
+  dim3 threads(TILE_SIZE * TILE_SIZE, 1, 1);  // Single 1D block for coalescing
   dim3 blocks((N + TILE_SIZE - 1) / TILE_SIZE, (M + TILE_SIZE - 1) / TILE_SIZE,
               1);
 
