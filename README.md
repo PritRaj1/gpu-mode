@@ -1,6 +1,6 @@
 # gpu-mode
 
-Submission for [GPU MODE](https://www.gpumode.com) practice problems.
+Submission utils for [GPU MODE](https://www.gpumode.com) practice problems.
 
 ## Requirements
 
