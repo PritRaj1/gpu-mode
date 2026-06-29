@@ -1,6 +1,6 @@
 # gpu-mode
 
-Submission utils for [GPU MODE](https://www.gpumode.com) practice problems.
+Submission utils for learning naive CUDA with [GPU MODE](https://www.gpumode.com) practice problems.
 
 ## Requirements
 
@@ -17,6 +17,20 @@ uv sync
 
 ## Quick start
 
+Create a directory for a specific GPU MODE problem in `problems` and make a CUDA kernel called `kernel.cu`. For example, in `problems/matmul_v2/kernel.cu`:
+
+```cuda
+#include <torch/extension.h>
+
+// your kernel...
+...
+...
+
+PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
+  m.def("forward", &forward, "Matrix Multiplication Forward (CUDA)");
+}
+```
+
 Run with `uv run gpu-mode`:
 
 ```bash
@@ -31,6 +45,7 @@ Commands:
   build    Bundle C++ kernel with submission.py template.
   clean    Clear build artifacts and wipe local PyTorch JIT caches.
   compile  JIT compile C++ kernel to check for compilation errors.
+  format   Format Python code with ruff and kernels with clang-format.
 ```
 
 For example, to build the python submission script for the `matmul_v2`
