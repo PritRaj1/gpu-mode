@@ -11,8 +11,8 @@ __global__ void matmul_naive_kernel(const __half *__restrict__ A,
                                     const __half *__restrict__ B,
                                     __half *__restrict__ C, int M, int N,
                                     int K) {
-  const int row = blockIdx.y * blockDim.y + threadIdx.y;  // vertical (y)
-  const int col = blockIdx.x * blockDim.x + threadIdx.x;  // horiz (x)
+  const int row = blockIdx.y * blockDim.y + threadIdx.y; // vertical (y)
+  const int col = blockIdx.x * blockDim.x + threadIdx.x; // horiz (x)
 
   if (row < M && col < N) {
     float acc = 0.0f;
