@@ -4,11 +4,12 @@ version = "0.1.0"
 requires-python = ">=3.10,<3.12"
 
 dependencies = [
-    "torch>=2.5,<2.8",
-    "numpy<2",
-    "ninja",
-    "pytest",
-    "click",
+    "ruff>=0.15.20",
+    "ninja>=1.13.0",
+    "pytest>=9.1.1",
+    "click>=8.4.2",
+    "numpy>=2.2.6",
+    "torch>=2.12.1",
 ]
 
 [project.scripts]

@@ -1,7 +1,8 @@
-from pathlib import Path
+import os
 import click
 import shutil
-import os
+import subprocess
+from pathlib import Path
 from torch.utils.cpp_extension import load_inline
 
 
@@ -78,6 +79,32 @@ def clean():
         click.echo(f"Wiped Torch JIT extensions cache at: {cache_dir}")
 
     click.secho("Workspace reset!", fg="green")
+
+
+@main.command()
+def format():
+    """Format Python code with ruff and kernels with clang-format."""
+
+    python_targets = ["src", "problems", "build"]
+    python_paths = [p for p in python_targets if Path(p).exists()]
+
+    if python_paths:
+        click.echo("🐍 Running ruff")
+        subprocess.run(["ruff", "format"] + python_paths, check=False)
+
+    cuda_files = list(Path("problems").rglob("*.cu"))
+    if cuda_files:
+        if shutil.which("clang-format"):
+            click.echo("  Running clang-format")
+            file_strings = [str(f) for f in cuda_files]
+            subprocess.run(["clang-format", "-i"] + file_strings, check=False)
+        else:
+            click.echo(
+                "x  clang-format not found in PATH. Skipping .cu kernel fmt.\n",
+                fg="yellow",
+            )
+
+    click.secho("Format complete!", fg="green")
 
 
 if __name__ == "__main__":

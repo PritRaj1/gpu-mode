@@ -5,6 +5,7 @@ Submission utils for [GPU MODE](https://www.gpumode.com) practice problems.
 ## Requirements
 
 - [uv](https://docs.astral.sh/uv/)
+- [clang-format](https://clang.llvm.org/docs/ClangFormat.html)
 - [Popcorn](https://github.com/gpu-mode/popcorn-cli)
 - [Nsight systems](https://developer.nvidia.com/nsight-systems/get-started)
 

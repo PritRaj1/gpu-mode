@@ -7,12 +7,12 @@
 /*
 __restrict__ hint: this pointer is the sole pointer that accesses A
 */
-__global__ void matmul_naive_kernel(const __half* __restrict__ A,
-                                    const __half* __restrict__ B,
-                                    __half* __restrict__ C, int M, int N,
+__global__ void matmul_naive_kernel(const __half *__restrict__ A,
+                                    const __half *__restrict__ B,
+                                    __half *__restrict__ C, int M, int N,
                                     int K) {
-  const int row = blockIdx.y * blockDim.y + threadIdx.y;  // vertical (y)
-  const int col = blockIdx.x * blockDim.x + threadIdx.x;  // horiz (x)
+  const int row = blockIdx.y * blockDim.y + threadIdx.y; // vertical (y)
+  const int col = blockIdx.x * blockDim.x + threadIdx.x; // horiz (x)
 
   if (row < M && col < N) {
     float acc = 0.0f;
@@ -37,9 +37,9 @@ torch::Tensor forward(torch::Tensor A, torch::Tensor B, torch::Tensor C) {
               1);
 
   matmul_naive_kernel<<<blocks, threads>>>(
-      reinterpret_cast<const __half*>(A.data_ptr<at::Half>()),
-      reinterpret_cast<const __half*>(B.data_ptr<at::Half>()),
-      reinterpret_cast<__half*>(C.data_ptr<at::Half>()), M, N, K);
+      reinterpret_cast<const __half *>(A.data_ptr<at::Half>()),
+      reinterpret_cast<const __half *>(B.data_ptr<at::Half>()),
+      reinterpret_cast<__half *>(C.data_ptr<at::Half>()), M, N, K);
 
   return C;
 }
